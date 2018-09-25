@@ -1,0 +1,29 @@
+Gab
+	3.Audio
+
+J-C F
+	1.
+Jul
+	3.Base/Texte/image
+Nic 
+	3.Video
+	
+
+3 activity :
+	X1.Accéder par des liens http contenant des flux RSS (page principale avec la liste des flux sauvées)
+	2.Affiche les titres et contenus d'un des flux (page principale d'un flux)
+	X3.Permet de voir les détails d'un item et permet de lancer des activité de lecture (élément d'un flux)
+	
+Application retient flux déjà ouvert via système de préférence android
+Démarrage --> Affliche les flux de la dernière utilisation (préférence android)
+	Si lancé à partir d'une page web (1.) --> HTTP affiche en haut avec un + pour l'ajouter à la liste
+	
+Chaque item de la liste des flux : image, titre, nombre d'article pas lus
+Bouton - retire de la liste des flux ET de la mémoire des lus
+Click image ou titre d'un flux --> 2.
+Application intégrées à VLC ou un lecteur style VLC pour les items des flux
+
+	
+	
+	
+	
