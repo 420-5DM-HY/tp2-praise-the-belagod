@@ -10,6 +10,8 @@ public class DetailItem extends AppCompatActivity {
     private String description;
     private String lien;
     private Bitmap image;
+    private int nbArticlesNonLus;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

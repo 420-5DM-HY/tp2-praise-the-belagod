@@ -47,26 +47,41 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 audio = new FluxAudio("http://www.podtrac.com/pts/redirect.mp3/cdn.twit.tv/audio/sn/sn0679/sn0679.mp3", MainActivity.this);
                 audio.run();
-                videoView.stopPlayback();
+                //videoView.stopPlayback();
             }
         });
-
-        mediaController = new MediaController(this);
-        mediaController.setAnchorView(videoView);
-        String url = "http://www.podtrac.com/pts/redirect.mp4/cdn.twit.tv/video/sn/sn0681/sn0681_h264m_1280x720_1872.mp4";
-        videoView = (VideoView)findViewById(R.id.vidVideo);
-        videoView.setMediaController(mediaController);
-        videoView.setVideoURI(Uri.parse(url));
-        videoView.requestFocus();
 
         Button btnVideo = this.findViewById(R.id.btnPlay);
         btnVideo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                videoView.start();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        LoadVideo("http://www.podtrac.com/pts/redirect.mp4/cdn.twit.tv/video/sn/sn0681/sn0681_h264m_1280x720_1872.mp4");
+                        videoView.start();
+                    }
+                });
             }
         });
     }
+
+    private void LoadVideo(final String url)
+    {
+        mediaController = new MediaController(MainActivity.this);
+        mediaController.setAnchorView(videoView);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                videoView = (VideoView)findViewById(R.id.vidVideo);
+                videoView.setMediaController(mediaController);
+                videoView.setVideoURI(Uri.parse(url));
+                videoView.setZOrderOnTop(true);
+            }
+        });
+        videoView.requestFocus();
+    }
+
     private void getFlux(){
 
         new Thread(new Runnable() {
