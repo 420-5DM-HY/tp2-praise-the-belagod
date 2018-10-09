@@ -1,30 +1,31 @@
 package com.example.gbour.tp2;
 
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
+import android.widget.MediaController;
 import android.widget.TextView;
+import android.widget.VideoView;
 
+import com.example.libfluxrss.FluxAudio;
 import com.example.libfluxrss.ParseFluxRss;
 import com.example.libfluxrss.RssItem;
 
-import org.w3c.dom.Text;
-import org.xml.sax.SAXException;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.xml.parsers.ParserConfigurationException;
 
 public class MainActivity extends AppCompatActivity {
 
     MediaPlayer mp;
     TextView txtResult;
     String data;
+    FluxAudio audio;
+    VideoView videoView;
+    MediaController mediaController;
+
     //.setTag() et .getTag() .invalidateViews() à garder en tête J.P.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,20 +40,32 @@ public class MainActivity extends AppCompatActivity {
                 getFlux();
             }
         });
-        // Code à Gab pour l'audio
-        /*
-        String url = "http://www.podtrac.com/pts/redirect.mp3/cdn.twit.tv/audio/sn/sn0679/sn0679.mp3";
-        MediaPlayer mp = new MediaPlayer();
-        try {
-            mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
-            mp.setDataSource(url);
-            mp.prepare();
-            mp.start();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        */
 
+        Button btnAudio = this.findViewById(R.id.btnAudio);
+        btnAudio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                audio = new FluxAudio("http://www.podtrac.com/pts/redirect.mp3/cdn.twit.tv/audio/sn/sn0679/sn0679.mp3", MainActivity.this);
+                audio.run();
+                videoView.stopPlayback();
+            }
+        });
+
+        mediaController = new MediaController(this);
+        mediaController.setAnchorView(videoView);
+        String url = "http://www.podtrac.com/pts/redirect.mp4/cdn.twit.tv/video/sn/sn0681/sn0681_h264m_1280x720_1872.mp4";
+        videoView = (VideoView)findViewById(R.id.vidVideo);
+        videoView.setMediaController(mediaController);
+        videoView.setVideoURI(Uri.parse(url));
+        videoView.requestFocus();
+
+        Button btnVideo = this.findViewById(R.id.btnPlay);
+        btnVideo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                videoView.start();
+            }
+        });
     }
     private void getFlux(){
 

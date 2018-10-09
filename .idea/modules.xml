@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/PraiseTheBelagod.iml" filepath="$PROJECT_DIR$/PraiseTheBelagod.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/libfluxrss/libfluxrss.iml" filepath="$PROJECT_DIR$/libfluxrss/libfluxrss.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tp2-praise-the-belagod.iml" filepath="$PROJECT_DIR$/tp2-praise-the-belagod.iml" />
     </modules>
   </component>
 </project>
