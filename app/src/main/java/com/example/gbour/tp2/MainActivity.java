@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.MediaController;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.example.libfluxrss.FluxAudio;
@@ -21,19 +22,23 @@ public class MainActivity extends AppCompatActivity {
 
     MediaPlayer mp;
     TextView txtResult;
-    String data;
+    String data = "";
     FluxAudio audio;
     VideoView videoView;
     MediaController mediaController;
-
+    List<RssItem> lstItems;
     //.setTag() et .getTag() .invalidateViews() à garder en tête J.P.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        txtResult =  findViewById(R.id.txtResultat);
+        txtResult = findViewById(R.id.txtResultat);
 
-        ((TextView)findViewById(R.id.txtUrl)).setText("http://feeds.twit.tv/sn_video_hd.xml");
+        // Test videos
+        //((TextView) findViewById(R.id.txtUrl)).setText("http://feeds.twit.tv/sn_video_hd.xml");
+        //Test de Flux
+        ((TextView) findViewById(R.id.txtUrl)).setText("https://www.developpez.com/index/rss");
+
         findViewById(R.id.btnGetDatas).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -50,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
                 //videoView.stopPlayback();
             }
         });
+
 
         Button btnVideo = this.findViewById(R.id.btnPlay);
         btnVideo.setOnClickListener(new View.OnClickListener() {
@@ -83,34 +89,32 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getFlux(){
+        lstItems = new ArrayList<>();
 
         new Thread(new Runnable() {
             @Override
             public void run() {
                 ParseFluxRss pFR = new ParseFluxRss();
-                List<RssItem> lstItems = new ArrayList<>();
                 try {
-                    lstItems = pFR.getItems(((TextView)findViewById(R.id.txtUrl)).getText().toString());
+                    lstItems = pFR.getItems(((TextView) findViewById(R.id.txtUrl)).getText().toString());
                     data = lstItems.get(0).description;
                 } catch (Exception e) {
                     data = e.getMessage();
                 }
+
                 try {
-                MainActivity.this.runOnUiThread(new Runnable() {
-                    public void run() {
+                    MainActivity.this.runOnUiThread(new Runnable() {
+                        public void run() {
+                            txtResult.setText(data);
+                        }
 
-                        txtResult.setText(data);
-                    }
-
-                });
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-             catch (Exception e)
-            {
-                e.printStackTrace();
-            }
 
             }
-        });
+        }).start();
 
     }
 }
