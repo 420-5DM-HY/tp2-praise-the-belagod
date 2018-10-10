@@ -19,7 +19,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".DetailItem" />
-        <activity android:name=".ListeFluxActivity"></activity>
+        <activity android:name=".ListeFluxActivity" />
+        <activity android:name=".ListeItemsActivity"></activity>
     </application>
 
 </manifest>

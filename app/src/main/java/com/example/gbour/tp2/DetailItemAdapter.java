@@ -23,6 +23,7 @@ public class DetailItemAdapter extends ArrayAdapter {
      */
 
     List<DetailItem> Flux;
+    DetailItem item;
 
     public DetailItemAdapter(Context context, int resource, List<DetailItem> objects) {
         super(context, resource, objects);
@@ -35,19 +36,6 @@ public class DetailItemAdapter extends ArrayAdapter {
         {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.layout_detail_item, parent, false);
         }
-
-        TextView txtNom = convertView.findViewById(R.id.txtNomFlux);
-        ImageView imgImage = convertView.findViewById(R.id.imgFlux);
-        TextView txtNonLus = convertView.findViewById(R.id.txtNbArticlesNonLus);
-        Button btnSupprimer = convertView.findViewById(R.id.btnSupprimer);
-
-        final DetailItem item = (DetailItem)Flux.get(position);
-        btnSupprimer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Flux.remove(item);
-            }
-        });
 
         //text.setText(Taches.get(position).libelle);
         //fini.setChecked(Taches.get(position).finie);
