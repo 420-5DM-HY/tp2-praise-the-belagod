@@ -1,29 +1,40 @@
 package com.example.gbour.tp2;
 
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 
 import com.example.libfluxrss.ParseFluxRss;
 import com.example.libfluxrss.RssItem;
 
+import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 public class DetailFlux {
-    private String titre;
-    private String description;
-    private String lien;
-    private Bitmap image;
-    private int nbArticlesNonLus;
+    public String titre;
+    public String description;
+    public String lien;
+    public Bitmap image;
+    public int nbArticlesNonLus;
 
-    public DetailFlux(String URL)
-    {
+    public DetailFlux(String URL) throws ParserConfigurationException, IOException, SAXException {
         this.lien = URL;
-        //À compléter pour fetch le reste des infos de l'item.
+
+        ParseFluxRss pfrss = new ParseFluxRss();
+
+        ArrayList<RssItem> items = (ArrayList<RssItem>)pfrss.getItems(URL);
+        titre = items.get(0).titre;
+        lien = items.get(0).lien;
+        description = items.get(0).description;
+        image = items.get(0).image;
     }
 
     public List<RssItem> GetArticles() throws IOException, SAXException, ParserConfigurationException {

@@ -8,7 +8,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import org.xml.sax.SAXException;
+
+import java.io.IOException;
 import java.util.ArrayList;
+
+import javax.xml.parsers.ParserConfigurationException;
 
 public class ListeFluxActivity extends AppCompatActivity {
 
@@ -20,6 +25,11 @@ public class ListeFluxActivity extends AppCompatActivity {
      */
 
     ArrayList<DetailFlux> mesFlux;
+    ArrayAdapter<DetailFlux> aa;
+    EditText et;
+    DetailFlux df;
+    Thread tAdd;
+    ListView lv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,17 +37,49 @@ public class ListeFluxActivity extends AppCompatActivity {
         setContentView(R.layout.activity_liste_flux);
 
         mesFlux = new ArrayList<DetailFlux>();
+        et = findViewById(R.id.txtURL);
 
-        ArrayAdapter<DetailFlux> aa = new DetailFluxAdapter(this, 0, mesFlux);
-        final ListView lv = findViewById(R.id.lstListeFlux);
-        lv.setAdapter(aa);
+        lv = findViewById(R.id.lstListeFlux);
+        RefreshList();
+
+        tAdd = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    df = new DetailFlux(et.getText().toString());
+                } catch (ParserConfigurationException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (SAXException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
 
         Button btnAjouter = findViewById(R.id.btnAjouter);
         btnAjouter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EditText et = ListeFluxActivity.this.findViewById(R.id.txtURL);
-                mesFlux.add(new DetailFlux(et.getText().toString()));
+                tAdd.start();
+                try {
+                    tAdd.join();
+                    mesFlux.add(df);
+                    RefreshList();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    public void RefreshList()
+    {
+        ListeFluxActivity.this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                aa = new DetailFluxAdapter(ListeFluxActivity.this, 0, mesFlux);
+                lv.setAdapter(aa);
             }
         });
     }

@@ -20,10 +20,12 @@
         android:id="@+id/txtNomFlux"
         android:layout_width="269dp"
         android:layout_height="19dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginEnd="7dp"
         android:layout_marginStart="6dp"
         android:layout_marginTop="8dp"
         android:text="nom"
+        app:layout_constraintBottom_toTopOf="@+id/txtNbArticlesNonLus"
         app:layout_constraintEnd_toStartOf="@+id/btnSupprimer"
         app:layout_constraintStart_toEndOf="@+id/imgFlux"
         app:layout_constraintTop_toTopOf="parent" />

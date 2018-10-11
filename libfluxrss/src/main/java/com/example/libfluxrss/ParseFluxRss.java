@@ -5,6 +5,7 @@ import android.util.Xml;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -32,25 +33,41 @@ public class ParseFluxRss {
         Document dom;
         DocumentBuilder builder;
 
-            builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-            dom = builder.parse(url);
-            items = parseFlux(dom);
+        builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        dom = builder.parse(url);
+        items = parseFlux(dom);
         return items;
     }
 
     public List<RssItem> parseFlux(Document doc){
-        String titre;
-        String lien;
-        String desc;
+        String titre = "";
+        String lien = "";
+        String desc = "";
         Bitmap image;
+        RssItem item;
         boolean isItem = false;
         List<RssItem> items = new ArrayList<>();
-        int nbElements = doc.getElementsByTagName("title").getLength();
+
+        /**
+         * Ajout de l'item servant d'entête du flux au début de la liste.
+         */
         items.add(new RssItem(doc.getElementsByTagName("title").item(0).getTextContent(),
                 doc.getElementsByTagName("description").item(0).getTextContent(),
                 doc.getElementsByTagName("link").item(0).getTextContent(),
                 null));
 
+        int nbElements = doc.getElementsByTagName("item").getLength();
+
+        NodeList nl = doc.getElementsByTagName("item");
+        for (int i = 0; i < (nbElements - 1); i++)
+        {
+            titre = doc.getElementsByTagName("title").item(i+1).getTextContent();
+            desc = doc.getElementsByTagName("description").item(i+1).getTextContent();
+            lien = doc.getElementsByTagName("link").item(i+1).getTextContent();
+            //doc.getElementsByTagName("image").item(i+1).getChildNodes().item(1).getTextContent();
+            item = new RssItem(titre, desc, lien, null);
+            items.add(item);
+        }
 
         return items;
     }

@@ -2,6 +2,7 @@ package com.example.gbour.tp2;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -17,6 +18,7 @@ import com.example.libfluxrss.RssItem;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -30,7 +32,9 @@ public class DetailFluxAdapter extends ArrayAdapter {
      */
 
     List<DetailFlux> Flux;
+    ArrayList<RssItem> items;
     DetailFlux item;
+    Thread tGetArticles;
 
     public DetailFluxAdapter(Context context, int resource, List<DetailFlux> objects) {
         super(context, resource, objects);
@@ -49,7 +53,11 @@ public class DetailFluxAdapter extends ArrayAdapter {
         TextView txtNonLus = convertView.findViewById(R.id.txtNbArticlesNonLus);
         Button btnSupprimer = convertView.findViewById(R.id.btnSupprimer);
 
-        item = (DetailFlux)Flux.get(position);
+        item = Flux.get(position);
+
+        txtNom.setText(Flux.get(position).titre);
+        //txtNonLus.setText(Flux.get(position).nbArticlesNonLus);
+
         btnSupprimer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -57,11 +65,11 @@ public class DetailFluxAdapter extends ArrayAdapter {
             }
         });
 
-        imgImage.setOnClickListener(new View.OnClickListener() {
+        tGetArticles = new Thread(new Runnable() {
             @Override
-            public void onClick(View v) {
+            public void run() {
                 try {
-                    List<RssItem> items = item.GetArticles();
+                    items = (ArrayList<RssItem>) item.GetArticles();
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (SAXException e) {
@@ -69,30 +77,51 @@ public class DetailFluxAdapter extends ArrayAdapter {
                 } catch (ParserConfigurationException e) {
                     e.printStackTrace();
                 }
+            }
+        });
 
-                Intent intent = new Intent(DetailFluxAdapter.this, ListeItemsActivity.class);
+        imgImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tGetArticles.start();
+                try {
+                    tGetArticles.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
 
+                /**
+                 * Passer à l'activité qui listera les items la liste des items liés à un flux.
+                 */
+                Intent intent = new Intent(getContext(), ListeItemsActivity.class);
+                Bundle b = new Bundle();
+                b.putSerializable("Articles", items);
+                intent.putExtra("Bundle", b);
+                getContext().startActivity(intent);
             }
         });
 
         txtNom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                tGetArticles.start();
                 try {
-                    List<RssItem> items = item.GetArticles();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (SAXException e) {
-                    e.printStackTrace();
-                } catch (ParserConfigurationException e) {
+                    tGetArticles.join();
+                } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+
+                /**
+                 * Passer à l'activité qui listera les items la liste des items liés à un flux.
+                 */
+                Intent intent = new Intent(getContext(), ListeItemsActivity.class);
+                Bundle b = new Bundle();
+                b.putSerializable("Articles", items);
+                intent.putExtra("Bundle", b);
+                getContext().startActivity(intent);
             }
         });
 
-        //text.setText(Taches.get(position).libelle);
-        //fini.setChecked(Taches.get(position).finie);
-//
         return convertView;
     }
 }
