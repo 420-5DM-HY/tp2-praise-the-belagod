@@ -63,7 +63,8 @@ public class ParseFluxRss {
         {
             titre = doc.getElementsByTagName("title").item(i+1).getTextContent();
             desc = doc.getElementsByTagName("description").item(i+1).getTextContent();
-            lien = doc.getElementsByTagName("link").item(i+1).getTextContent();
+            //lien = doc.getElementsByTagName("link").item(i+1).getTextContent();
+            lien = doc.getElementsByTagName("media:content").item(i+1).getAttributes().getNamedItem("url").getTextContent();
             //doc.getElementsByTagName("image").item(i+1).getChildNodes().item(1).getTextContent();
             item = new RssItem(titre, desc, lien, null);
             items.add(item);
