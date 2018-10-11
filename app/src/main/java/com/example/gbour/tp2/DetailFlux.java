@@ -32,14 +32,13 @@ public class DetailFlux {
 
         ArrayList<RssItem> items = (ArrayList<RssItem>)pfrss.getItems(URL);
         titre = items.get(0).titre;
-        lien = items.get(0).lien;
         description = items.get(0).description;
         image = items.get(0).image;
     }
 
-    public List<RssItem> GetArticles() throws IOException, SAXException, ParserConfigurationException {
+    public ArrayList<RssItem> GetArticles() throws IOException, SAXException, ParserConfigurationException {
         ParseFluxRss pfrss = new ParseFluxRss();
-        List<RssItem> items = pfrss.getItems(lien);
+        ArrayList<RssItem> items = (ArrayList<RssItem>)pfrss.getItems(lien);
         return items;
     }
 }

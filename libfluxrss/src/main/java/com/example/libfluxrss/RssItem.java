@@ -2,11 +2,13 @@ package com.example.libfluxrss;
 
 import android.graphics.Bitmap;
 
+import java.io.Serializable;
+
 /**
  * @Author Julien Pineault
  * Modèle allant contenir les items du flux RSS
  */
-public class RssItem {
+public class RssItem implements Serializable {
     public String titre;
     public String description;
     public String lien;

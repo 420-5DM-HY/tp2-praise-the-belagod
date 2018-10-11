@@ -14,6 +14,8 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.libfluxrss.RssItem;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,10 +26,10 @@ public class DetailItemAdapter extends ArrayAdapter {
      * dans le ListeView.
      */
 
-    List<DetailItem> items;
-    DetailItem item;
+    List<RssItem> items;
+    Article item;
 
-    public DetailItemAdapter(Context context, int resource, List<DetailItem> objects) {
+    public DetailItemAdapter(Context context, int resource, List<RssItem> objects) {
         super(context, resource, objects);
         this.items = objects;
     }
@@ -41,11 +43,20 @@ public class DetailItemAdapter extends ArrayAdapter {
 
         TextView nomArticle = convertView.findViewById(R.id.txtNomArticle);
         nomArticle.setText(items.get(position).titre);
+        //item.image = items.get(position).image;
 
         nomArticle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(getContext(), DetailItem.class);
+                Bundle b = new Bundle();
+                item = new Article();
+                item.titre = items.get(position).titre;
+                item.description = items.get(position).description;
+                item.lien = items.get(position).lien;
+                b.putSerializable("Article", item);
+                intent.putExtra("Bundle", b);
+                getContext().startActivity(intent);
             }
         });
 
