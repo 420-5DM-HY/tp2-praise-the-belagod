@@ -1,6 +1,8 @@
 package com.example.gbour.tp2;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -9,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.libfluxrss.FluxAudio;
+import com.example.libfluxrss.FluxVideo;
 import com.example.libfluxrss.RssItem;
 import com.example.libfluxrss.TraitementRSS;
 
@@ -23,6 +26,8 @@ public class DetailItem extends AppCompatActivity implements Serializable{
     public Bitmap image;
     private Article item;
     private FluxAudio audio;
+    private FluxVideo video;
+    private String mediaType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +39,9 @@ public class DetailItem extends AppCompatActivity implements Serializable{
         titre = item.titre;
         description = item.description;
         lien = item.lien;
+        mediaType = item.mediaType;
+        if (mediaType == null)
+            mediaType = "";
         //image = item.image;
 
         TextView txtNom = this.findViewById(R.id.txtTitle);
@@ -44,8 +52,16 @@ public class DetailItem extends AppCompatActivity implements Serializable{
         btnPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                audio = new FluxAudio(lien, getApplicationContext());
-                audio.run();
+                if (mediaType.contains("audio"))
+                {
+                    audio = new FluxAudio(lien, getApplicationContext());
+                    audio.run();
+                }
+                else if (mediaType.contains("video"))
+                {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(lien));
+                    startActivity(intent);
+                }
             }
         });
 

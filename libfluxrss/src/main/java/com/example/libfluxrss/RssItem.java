@@ -13,10 +13,13 @@ public class RssItem implements Serializable {
     public String description;
     public String lien;
     public Bitmap image;
-    public RssItem(String titre, String desc, String lien, Bitmap image){
+    public String mediaType;
+
+    public RssItem(String titre, String desc, String lien, Bitmap image, String mediaType){
         this.titre = titre;
         this.description = desc;
         this.lien = lien;
         this.image = image;
+        this.mediaType = mediaType;
     }
 }

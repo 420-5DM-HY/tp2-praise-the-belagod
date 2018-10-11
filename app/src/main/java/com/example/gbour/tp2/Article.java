@@ -9,4 +9,5 @@ public class Article implements Serializable{
     public String description;
     public String lien;
     public Bitmap image;
+    public String mediaType;
 }

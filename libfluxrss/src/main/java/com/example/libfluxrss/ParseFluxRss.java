@@ -43,6 +43,7 @@ public class ParseFluxRss {
         String titre = "";
         String lien = "";
         String desc = "";
+        String mediaType = "";
         Bitmap image;
         RssItem item;
         boolean isItem = false;
@@ -54,7 +55,7 @@ public class ParseFluxRss {
         items.add(new RssItem(doc.getElementsByTagName("title").item(0).getTextContent(),
                 doc.getElementsByTagName("description").item(0).getTextContent(),
                 doc.getElementsByTagName("link").item(0).getTextContent(),
-                null));
+                null, null));
 
         int nbElements = doc.getElementsByTagName("item").getLength();
 
@@ -65,8 +66,9 @@ public class ParseFluxRss {
             desc = doc.getElementsByTagName("description").item(i+1).getTextContent();
             //lien = doc.getElementsByTagName("link").item(i+1).getTextContent();
             lien = doc.getElementsByTagName("media:content").item(i+1).getAttributes().getNamedItem("url").getTextContent();
+            mediaType = doc.getElementsByTagName("media:content").item(i+1).getAttributes().getNamedItem("type").getTextContent();
             //doc.getElementsByTagName("image").item(i+1).getChildNodes().item(1).getTextContent();
-            item = new RssItem(titre, desc, lien, null);
+            item = new RssItem(titre, desc, lien, null, mediaType);
             items.add(item);
         }
 

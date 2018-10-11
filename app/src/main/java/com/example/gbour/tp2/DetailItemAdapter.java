@@ -54,6 +54,7 @@ public class DetailItemAdapter extends ArrayAdapter {
                 item.titre = items.get(position).titre;
                 item.description = items.get(position).description;
                 item.lien = items.get(position).lien;
+                item.mediaType = items.get(position).mediaType;
                 b.putSerializable("Article", item);
                 intent.putExtra("Bundle", b);
                 getContext().startActivity(intent);
