@@ -1,1 +1,1 @@
-include ':app', ':libfluxrss'
+include ':app', ':libfluxrss', ':jsoup-1.11.3'

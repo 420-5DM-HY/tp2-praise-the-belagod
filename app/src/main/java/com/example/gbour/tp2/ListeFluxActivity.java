@@ -6,8 +6,10 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 
+import org.jsoup.Jsoup;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
@@ -57,7 +59,7 @@ public class ListeFluxActivity extends AppCompatActivity {
             }
         });
 
-        Button btnAjouter = findViewById(R.id.btnAjouter);
+        ImageButton btnAjouter = findViewById(R.id.btnAjouter);
         btnAjouter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

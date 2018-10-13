@@ -15,6 +15,12 @@ import com.example.libfluxrss.FluxVideo;
 import com.example.libfluxrss.RssItem;
 import com.example.libfluxrss.TraitementRSS;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -37,12 +43,21 @@ public class DetailItem extends AppCompatActivity implements Serializable{
         Bundle extras = getIntent().getExtras();
         item = (Article)extras.getBundle("Bundle").getSerializable("Article");
         titre = item.titre;
-        description = item.description;
+        //description = item.description;
         lien = item.lien;
         mediaType = item.mediaType;
         if (mediaType == null)
             mediaType = "";
         //image = item.image;
+
+        Document doc = Jsoup.parse(item.description);
+        Elements p = doc.getElementsByTag("p");
+
+        for(Element e : p){
+            if(e != null){
+                description += e.text();
+            }
+        }
 
         TextView txtNom = this.findViewById(R.id.txtTitle);
         ImageView imageView = this.findViewById(R.id.imgIm);
@@ -66,6 +81,6 @@ public class DetailItem extends AppCompatActivity implements Serializable{
         });
 
         txtNom.setText(item.titre);
-        txtDesc.setText(item.description);
+        txtDesc.setText(description);
     }
 }
