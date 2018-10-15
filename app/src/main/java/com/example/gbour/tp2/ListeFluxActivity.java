@@ -34,6 +34,7 @@ public class ListeFluxActivity extends AppCompatActivity {
     EditText et;
     DetailFlux df;
     Thread tAdd;
+    Thread tDelete;
     ListView lv;
 
     DatabaseHelper db;
@@ -72,7 +73,6 @@ public class ListeFluxActivity extends AppCompatActivity {
         SavedFluxs.start();
         RefreshList();
 
-
         tAdd = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -95,13 +95,16 @@ public class ListeFluxActivity extends AppCompatActivity {
                 tAdd.start();
                 try {
                     boolean exist = false;
+
                     for (Flux f: db.getAllFluxs()) {
-                        if (f.getUrl() == et.getText().toString()){
+
+                        if (f.getUrl().equals(et.getText().toString())){
                             exist = true;
                         }
                     }
 
                     if(!exist){
+
                         db.insertUrl(et.getText().toString());
                         mesFlux.add(df);
                         tAdd.join();
@@ -112,6 +115,24 @@ public class ListeFluxActivity extends AppCompatActivity {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+            }
+        });
+
+        tDelete = new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        });
+
+        Button btnSupprimer = findViewById(R.id.btnSupprimer);
+        btnSupprimer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tDelete.start();
+
+
+                //db.deleteFlux();
             }
         });
     }
