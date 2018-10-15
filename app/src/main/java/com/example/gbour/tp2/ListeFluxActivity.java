@@ -9,6 +9,9 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
+import com.example.gbour.tp2.sqlite.database.model.DatabaseHelper;
+import com.example.gbour.tp2.sqlite.database.model.Flux;
+
 import org.jsoup.Jsoup;
 import org.xml.sax.SAXException;
 
@@ -33,16 +36,42 @@ public class ListeFluxActivity extends AppCompatActivity {
     Thread tAdd;
     ListView lv;
 
+    DatabaseHelper db;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_liste_flux);
 
+        db = new DatabaseHelper(this);
+
         mesFlux = new ArrayList<DetailFlux>();
         et = findViewById(R.id.txtURL);
 
         lv = findViewById(R.id.lstListeFlux);
+
+        Thread SavedFluxs = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (db.getFluxsCount() > 0){
+                    for (Flux f : db.getAllFluxs()) {
+                        try {
+                            mesFlux.add(new DetailFlux(f.getUrl()));
+                        } catch (ParserConfigurationException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (SAXException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        });
+
+        SavedFluxs.start();
         RefreshList();
+
 
         tAdd = new Thread(new Runnable() {
             @Override
@@ -65,8 +94,20 @@ public class ListeFluxActivity extends AppCompatActivity {
             public void onClick(View v) {
                 tAdd.start();
                 try {
-                    tAdd.join();
-                    mesFlux.add(df);
+                    boolean exist = false;
+                    for (Flux f: db.getAllFluxs()) {
+                        if (f.getUrl() == et.getText().toString()){
+                            exist = true;
+                        }
+                    }
+
+                    if(!exist){
+                        db.insertUrl(et.getText().toString());
+                        mesFlux.add(df);
+                        tAdd.join();
+                    }
+
+
                     RefreshList();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
