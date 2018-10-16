@@ -62,7 +62,6 @@ public class DetailFluxAdapter extends ArrayAdapter {
         txtNom.setText(Flux.get(position).titre);
         //txtNonLus.setText(Flux.get(position).nbArticlesNonLus);
         imgImage.setImageBitmap(item.image);
-        images = new ArrayList<byte[]>();
 
         btnSupprimer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,14 +95,6 @@ public class DetailFluxAdapter extends ArrayAdapter {
                     e.printStackTrace();
                 }
 
-                for (RssItem i : items)
-                {
-                    i.image.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-                    byte[] byteArray = stream.toByteArray();
-                    i.image.recycle();
-                    images.add(byteArray);
-                }
-
                 /**
                  * Passer à l'activité qui listera les items la liste des items liés à un flux.
                  */
@@ -129,14 +120,6 @@ public class DetailFluxAdapter extends ArrayAdapter {
                     e.printStackTrace();
                 }
 
-                for (RssItem i : items)
-                {
-                    i.image.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-                    byte[] byteArray = stream.toByteArray();
-                    i.image.recycle();
-                    images.add(byteArray);
-                }
-
                 /**
                  * Passer à l'activité qui listera les items la liste des items liés à un flux.
                  */
@@ -147,8 +130,7 @@ public class DetailFluxAdapter extends ArrayAdapter {
                     i.image = null;
                 }
                 b.putSerializable("Articles", items);
-                b.putString("url", item.lien);
-                intent.putExtra("Bundle", b);
+                intent.putExtras(b);
                 getContext().startActivity(intent);
             }
         });

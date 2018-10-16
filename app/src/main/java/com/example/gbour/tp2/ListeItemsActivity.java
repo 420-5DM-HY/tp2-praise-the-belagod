@@ -24,7 +24,7 @@ public class ListeItemsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_liste_items);
 
         Bundle extras = getIntent().getExtras();
-        items = (ArrayList<RssItem>) extras.getBundle("Bundle").getSerializable("Articles");
+        items = (ArrayList<RssItem>) extras.getSerializable("Articles");
 
         lv = findViewById(R.id.lstFluxItems);
         RefreshList();

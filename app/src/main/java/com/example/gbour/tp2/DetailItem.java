@@ -25,6 +25,7 @@ import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -41,7 +42,7 @@ public class DetailItem extends AppCompatActivity implements Serializable{
     private String mediaType;
     private ParseFluxRss pfrss;
     private ArrayList<RssItem> items;
-    private String url;
+    private Thread tGetinfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,26 +50,47 @@ public class DetailItem extends AppCompatActivity implements Serializable{
         setContentView(R.layout.activity_detail_item);
 
         Bundle extras = getIntent().getExtras();
-        url = extras.getBundle("Bundle").getString("url");
         pfrss = new ParseFluxRss();
+        item = (Article)extras.getBundle("Bundle").getSerializable("Article");
+
+        tGetinfo = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    items = (ArrayList<RssItem>)pfrss.getItems(item.lien);
+                } catch (ParserConfigurationException e) {
+                    e.printStackTrace();
+                } catch (SAXException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        tGetinfo.start();
         try {
-            items = (ArrayList<RssItem>)pfrss.getItems(url);
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        } catch (SAXException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+            tGetinfo.join();
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        item = (Article)extras.getBundle("Bundle").getSerializable("Article");
+
         titre = item.titre;
         description = item.description;
-        lien = item.lien;
         mediaType = item.mediaType;
         if (mediaType == null)
             mediaType = "";
 
-        image = items.get(items.indexOf(item)).image;
+        int index = 0;
+        for (int i=0;i<items.size();i++)
+        {
+            if (items.get(i).titre.equals(this.titre))
+            {
+                index = i;
+            }
+        }
+        image = items.get(index).image;
+        lien = item.lien;
 
         Document doc = Jsoup.parse(item.description);
         Elements p = doc.getElementsByTag("p");
@@ -83,6 +105,7 @@ public class DetailItem extends AppCompatActivity implements Serializable{
         ImageView imageView = this.findViewById(R.id.imgIm);
         TextView txtDesc = this.findViewById(R.id.txtDesc);
         Button btnPlay = this.findViewById(R.id.btnJouerContenu);
+        imageView.setImageBitmap(image);
 
         btnPlay.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -40,6 +40,10 @@ public class DetailFlux implements Serializable{
     public ArrayList<RssItem> GetArticles() throws IOException, SAXException, ParserConfigurationException {
         ParseFluxRss pfrss = new ParseFluxRss();
         ArrayList<RssItem> items = (ArrayList<RssItem>)pfrss.getItems(lien);
+        for (RssItem item : items)
+        {
+            item.lien = this.lien;
+        }
         return items;
     }
 }
