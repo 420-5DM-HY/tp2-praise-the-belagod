@@ -2,6 +2,7 @@ package com.example.gbour.tp2;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,6 +18,7 @@ import com.example.libfluxrss.RssItem;
 
 import org.xml.sax.SAXException;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,8 +35,10 @@ public class DetailFluxAdapter extends ArrayAdapter {
 
     List<DetailFlux> Flux;
     ArrayList<RssItem> items;
+    ArrayList<byte[]> images;
     DetailFlux item;
     Thread tGetArticles;
+    ByteArrayOutputStream stream = new ByteArrayOutputStream();
 
     public DetailFluxAdapter(Context context, int resource, List<DetailFlux> objects) {
         super(context, resource, objects);
@@ -57,6 +61,8 @@ public class DetailFluxAdapter extends ArrayAdapter {
 
         txtNom.setText(Flux.get(position).titre);
         //txtNonLus.setText(Flux.get(position).nbArticlesNonLus);
+        imgImage.setImageBitmap(item.image);
+        images = new ArrayList<byte[]>();
 
         btnSupprimer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,11 +96,23 @@ public class DetailFluxAdapter extends ArrayAdapter {
                     e.printStackTrace();
                 }
 
+                for (RssItem i : items)
+                {
+                    i.image.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                    byte[] byteArray = stream.toByteArray();
+                    i.image.recycle();
+                    images.add(byteArray);
+                }
+
                 /**
                  * Passer à l'activité qui listera les items la liste des items liés à un flux.
                  */
                 Intent intent = new Intent(getContext(), ListeItemsActivity.class);
                 Bundle b = new Bundle();
+                for (RssItem i : items)
+                {
+                    i.image = null;
+                }
                 b.putSerializable("Articles", items);
                 intent.putExtra("Bundle", b);
                 getContext().startActivity(intent);
@@ -111,12 +129,25 @@ public class DetailFluxAdapter extends ArrayAdapter {
                     e.printStackTrace();
                 }
 
+                for (RssItem i : items)
+                {
+                    i.image.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                    byte[] byteArray = stream.toByteArray();
+                    i.image.recycle();
+                    images.add(byteArray);
+                }
+
                 /**
                  * Passer à l'activité qui listera les items la liste des items liés à un flux.
                  */
                 Intent intent = new Intent(getContext(), ListeItemsActivity.class);
                 Bundle b = new Bundle();
+                for (RssItem i : items)
+                {
+                    i.image = null;
+                }
                 b.putSerializable("Articles", items);
+                b.putString("url", item.lien);
                 intent.putExtra("Bundle", b);
                 getContext().startActivity(intent);
             }

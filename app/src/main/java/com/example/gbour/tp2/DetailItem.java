@@ -2,6 +2,7 @@ package com.example.gbour.tp2;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 
 import com.example.libfluxrss.FluxAudio;
 import com.example.libfluxrss.FluxVideo;
+import com.example.libfluxrss.ParseFluxRss;
 import com.example.libfluxrss.RssItem;
 import com.example.libfluxrss.TraitementRSS;
 
@@ -19,10 +21,13 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+
+import javax.xml.parsers.ParserConfigurationException;
 
 public class DetailItem extends AppCompatActivity implements Serializable{
 
@@ -34,6 +39,9 @@ public class DetailItem extends AppCompatActivity implements Serializable{
     private FluxAudio audio;
     private FluxVideo video;
     private String mediaType;
+    private ParseFluxRss pfrss;
+    private ArrayList<RssItem> items;
+    private String url;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,14 +49,26 @@ public class DetailItem extends AppCompatActivity implements Serializable{
         setContentView(R.layout.activity_detail_item);
 
         Bundle extras = getIntent().getExtras();
+        url = extras.getBundle("Bundle").getString("url");
+        pfrss = new ParseFluxRss();
+        try {
+            items = (ArrayList<RssItem>)pfrss.getItems(url);
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        } catch (SAXException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         item = (Article)extras.getBundle("Bundle").getSerializable("Article");
         titre = item.titre;
-        //description = item.description;
+        description = item.description;
         lien = item.lien;
         mediaType = item.mediaType;
         if (mediaType == null)
             mediaType = "";
-        //image = item.image;
+
+        image = items.get(items.indexOf(item)).image;
 
         Document doc = Jsoup.parse(item.description);
         Elements p = doc.getElementsByTag("p");

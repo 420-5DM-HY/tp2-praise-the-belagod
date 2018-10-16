@@ -2,6 +2,7 @@ package com.example.gbour.tp2;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -27,6 +28,7 @@ public class DetailItemAdapter extends ArrayAdapter {
      */
 
     List<RssItem> items;
+    List<Bitmap> images;
     Article item;
 
     public DetailItemAdapter(Context context, int resource, List<RssItem> objects) {
@@ -43,7 +45,6 @@ public class DetailItemAdapter extends ArrayAdapter {
 
         TextView nomArticle = convertView.findViewById(R.id.txtNomArticle);
         nomArticle.setText(items.get(position).titre);
-        //item.image = items.get(position).image;
 
         nomArticle.setOnClickListener(new View.OnClickListener() {
             @Override
