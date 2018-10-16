@@ -30,6 +30,9 @@ import java.util.ArrayList;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+/**
+ * Detail d'un flux
+ */
 public class DetailItem extends AppCompatActivity implements Serializable{
 
     public String titre;

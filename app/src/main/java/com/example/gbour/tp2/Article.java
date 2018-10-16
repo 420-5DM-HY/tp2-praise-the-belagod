@@ -4,6 +4,10 @@ import android.graphics.Bitmap;
 
 import java.io.Serializable;
 
+/**
+ * @Author Gabriel Bourque
+ * Article Contenu dans un flux
+ */
 public class Article implements Serializable{
     public String titre;
     public String description;

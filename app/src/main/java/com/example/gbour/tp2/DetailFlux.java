@@ -19,6 +19,10 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+/**
+ * @Author Gabriel Bourque
+ * Classe contenant les détails d'un flux
+ */
 public class DetailFlux implements Serializable{
     public String titre;
     public String description;
@@ -26,6 +30,13 @@ public class DetailFlux implements Serializable{
     public Bitmap image;
     public int nbArticlesNonLus;
 
+    /**
+     * Constructeur permettant d'enter les détails d'un flux
+     * @param URL site à accéder
+     * @throws ParserConfigurationException
+     * @throws IOException
+     * @throws SAXException
+     */
     public DetailFlux(String URL) throws ParserConfigurationException, IOException, SAXException {
         this.lien = URL;
 
@@ -37,6 +48,13 @@ public class DetailFlux implements Serializable{
         image = items.get(0).image;
     }
 
+    /**
+     * Méthode permettant d'obtenir la liste des articles contenus dans un flux
+     * @return les articles d'un flux
+     * @throws IOException
+     * @throws SAXException
+     * @throws ParserConfigurationException
+     */
     public ArrayList<RssItem> GetArticles() throws IOException, SAXException, ParserConfigurationException {
         ParseFluxRss pfrss = new ParseFluxRss();
         ArrayList<RssItem> items = (ArrayList<RssItem>)pfrss.getItems(lien);

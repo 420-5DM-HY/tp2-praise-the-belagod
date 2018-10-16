@@ -45,6 +45,13 @@ public class DetailFluxAdapter extends ArrayAdapter {
         this.Flux = objects;
     }
 
+    /**
+     * Permet d'obtenir le layout du détail d'un flux
+     * @param position position dans la liste
+     * @param convertView
+     * @param parent
+     * @return retourne la vue à afficher
+     */
     public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
         if (convertView == null)

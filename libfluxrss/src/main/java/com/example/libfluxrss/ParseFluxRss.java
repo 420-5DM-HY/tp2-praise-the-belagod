@@ -43,6 +43,11 @@ public class ParseFluxRss {
         return items;
     }
 
+    /**
+     * @Author Julien Pineault  et Gabriel Bourque
+     * @param doc document contenant les informations d'un flux
+     * @return retourne la liste des items (flux rss)
+     */
     public List<RssItem> parseFlux(Document doc){
         String titre = "";
         String lien = "";
