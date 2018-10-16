@@ -3,8 +3,8 @@
     package="com.example.gbour.tp2">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -15,9 +15,26 @@
         android:theme="@style/AppTheme">
         <activity android:name=".ListeFluxActivity">
             <intent-filter>
+                <data android:scheme="http" />
+                <data android:scheme="https" />
+                <data android:host="*.ca" />
+                <data android:host="*.com" />
+                <data android:host="*.org" />
+                <data android:host="*.tv" />
+                <data android:host="*.net" />
+                <data android:pathPrefix="/rss/" />
+                <data android:pathPattern="*.xml" />
+                <data android:mimeType="text/rss" />
+                <data android:mimeType="text/xml" />
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+
             </intent-filter>
         </activity>
         <activity android:name=".DetailItem" />
