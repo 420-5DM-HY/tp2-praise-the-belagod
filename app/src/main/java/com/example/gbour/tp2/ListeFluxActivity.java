@@ -39,7 +39,6 @@ public class ListeFluxActivity extends AppCompatActivity {
      */
 
     ArrayList<DetailFlux> mesFlux;
-    ArrayList<String> listUrls;
     ArrayAdapter<DetailFlux> aa;
     EditText et;
     DetailFlux df;
@@ -169,35 +168,32 @@ public class ListeFluxActivity extends AppCompatActivity {
         });
     }
 
-    private void SerializeFluxs(){
-        FileOutputStream fos;
-        try {
-            fos = openFileOutput("SavedFluxs", Context.MODE_PRIVATE);
-            ObjectOutputStream oos = new ObjectOutputStream(fos);
-            for (DetailFlux df: mesFlux) {
-                oos.writeObject(df.lien);
-            }
-            oos.close();
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void DeserializeFluxs(){
-        try {
-            FileInputStream fis = openFileInput("SavedFluxs");
-            ObjectInputStream ois = new ObjectInputStream(fis);
-            listUrls = (ArrayList<String>) ois.readObject();
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-}
+    //private void SerializeFluxs(){
+    //    try {
+    //        FileOutputStream fos = getApplicationContext().openFileOutput("SavedFluxs", Context.MODE_PRIVATE);
+    //        ObjectOutputStream oos = new ObjectOutputStream(fos);
+    //        oos.writeObject(mesFlux);
+    //        oos.close();
+//
+    //    } catch (FileNotFoundException e) {
+    //        e.printStackTrace();
+    //    } catch (IOException e) {
+    //        e.printStackTrace();
+    //    }
+    //}
+//
+    //private void DeserializeFluxs(){
+    //    try {
+    //        FileInputStream fis = getApplicationContext().openFileInput("SavedFluxs");
+    //        ObjectInputStream ois = new ObjectInputStream(fis);
+    //        mesFlux = (ArrayList<DetailFlux>) ois.readObject();
+//
+    //    } catch (FileNotFoundException e) {
+    //        e.printStackTrace();
+    //    } catch (IOException e) {
+    //        e.printStackTrace();
+    //    } catch (ClassNotFoundException e) {
+    //        e.printStackTrace();
+    //    }
+    //}
+}//
