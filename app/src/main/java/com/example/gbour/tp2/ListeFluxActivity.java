@@ -1,5 +1,7 @@
 package com.example.gbour.tp2;
 
+import android.content.Context;
+import android.provider.SyncStateContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -8,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.gbour.tp2.sqlite.database.model.DatabaseHelper;
 import com.example.gbour.tp2.sqlite.database.model.Flux;
@@ -15,7 +18,13 @@ import com.example.gbour.tp2.sqlite.database.model.Flux;
 import org.jsoup.Jsoup;
 import org.xml.sax.SAXException;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -30,6 +39,7 @@ public class ListeFluxActivity extends AppCompatActivity {
      */
 
     ArrayList<DetailFlux> mesFlux;
+    ArrayList<String> listUrls;
     ArrayAdapter<DetailFlux> aa;
     EditText et;
     DetailFlux df;
@@ -70,7 +80,7 @@ public class ListeFluxActivity extends AppCompatActivity {
             }
         });
 
-        SavedFluxs.start();
+        //SavedFluxs.start();
         RefreshList();
 
         tAdd = new Thread(new Runnable() {
@@ -78,6 +88,7 @@ public class ListeFluxActivity extends AppCompatActivity {
             public void run() {
                 try {
                     df = new DetailFlux(et.getText().toString());
+
                 } catch (ParserConfigurationException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
@@ -96,19 +107,19 @@ public class ListeFluxActivity extends AppCompatActivity {
                 try {
                     boolean exist = false;
 
-                    for (Flux f: db.getAllFluxs()) {
+                    //for (Flux f: db.getAllFluxs()) {
 
-                        if (f.getUrl().equals(et.getText().toString())){
-                            exist = true;
-                        }
-                    }
+                    //    if (f.getUrl().equals(et.getText().toString())){
+                    //        exist = true;
+                    //    }
+                    //}
 
-                    if(!exist){
+                    //if(!exist){
 
-                        db.insertUrl(et.getText().toString());
-                        mesFlux.add(df);
+                    //    db.insertUrl(et.getText().toString());
                         tAdd.join();
-                    }
+                        mesFlux.add(df);
+                    //}
 
 
                     RefreshList();
@@ -118,23 +129,33 @@ public class ListeFluxActivity extends AppCompatActivity {
             }
         });
 
-        tDelete = new Thread(new Runnable() {
-            @Override
-            public void run() {
+        //tDelete = new Thread(new Runnable() {
+        //    @Override
+        //    public void run() {
+        //        TextView NomFlux = findViewById(R.id.txtNomFlux);
 
-            }
-        });
+        //        for (DetailFlux df : mesFlux) {
+        //            for (Flux f : db.getAllFluxs()) {
+        //                if(df.titre.equals(NomFlux.getText().toString()) && df.lien.equals(f.getUrl())){
+        //                    db.deleteFlux(f);
+        //                    mesFlux.remove(df);
+        //                }
+        //            }
+        //        }
+        //    }
+        //});
 
-        Button btnSupprimer = findViewById(R.id.btnSupprimer);
-        btnSupprimer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tDelete.start();
+        //Button btnSupprimer = findViewById(R.id.btnSupprimer);
+        //if (btnSupprimer != null){
+        //    btnSupprimer.setOnClickListener(new View.OnClickListener() {
+        //        @Override
+        //        public void onClick(View v) {
+        //            //tDelete.start();
 
-
-                //db.deleteFlux();
-            }
-        });
+        //            RefreshList();
+        //        }
+        //    });
+        //}
     }
 
     public void RefreshList()
@@ -146,5 +167,37 @@ public class ListeFluxActivity extends AppCompatActivity {
                 lv.setAdapter(aa);
             }
         });
+    }
+
+    private void SerializeFluxs(){
+        FileOutputStream fos;
+        try {
+            fos = openFileOutput("SavedFluxs", Context.MODE_PRIVATE);
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            for (DetailFlux df: mesFlux) {
+                oos.writeObject(df.lien);
+            }
+            oos.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void DeserializeFluxs(){
+        try {
+            FileInputStream fis = openFileInput("SavedFluxs");
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            listUrls = (ArrayList<String>) ois.readObject();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 }
