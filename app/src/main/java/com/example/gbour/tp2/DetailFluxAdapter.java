@@ -60,6 +60,7 @@ public class DetailFluxAdapter extends ArrayAdapter {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.layout_detail_item, parent, false);
         }
 
+        //Initialisation des composantes visuelles
         TextView txtNom = convertView.findViewById(R.id.txtNomFlux);
         ImageView imgImage = convertView.findViewById(R.id.imgFlux);
         TextView txtNonLus = convertView.findViewById(R.id.txtNbArticlesNonLus);
@@ -108,6 +109,8 @@ public class DetailFluxAdapter extends ArrayAdapter {
                  */
                 Intent intent = new Intent(getContext(), ListeItemsActivity.class);
                 Bundle b = new Bundle();
+                //Enlever les images pour ne pas causer de problème de données trop volumineuses
+                //lors de l'envoi par l'intent.
                 for (RssItem i : items)
                 {
                     i.image = null;
@@ -133,6 +136,8 @@ public class DetailFluxAdapter extends ArrayAdapter {
                  */
                 Intent intent = new Intent(getContext(), ListeItemsActivity.class);
                 Bundle b = new Bundle();
+                //Enlever les images pour ne pas causer de problème de données trop volumineuses
+                //lors de l'envoi par l'intent.
                 for (RssItem i : items)
                 {
                     i.image = null;

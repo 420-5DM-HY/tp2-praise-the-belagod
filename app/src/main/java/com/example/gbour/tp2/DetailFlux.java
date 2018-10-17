@@ -43,6 +43,7 @@ public class DetailFlux implements Serializable{
         ParseFluxRss pfrss = new ParseFluxRss();
 
         ArrayList<RssItem> items = (ArrayList<RssItem>)pfrss.getItems(URL);
+        //Obtention des données de présentation(détails) du flux
         titre = items.get(0).titre;
         description = items.get(0).description;
         image = items.get(0).image;

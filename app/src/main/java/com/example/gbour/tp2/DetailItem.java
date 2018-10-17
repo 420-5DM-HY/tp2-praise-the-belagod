@@ -51,8 +51,12 @@ public class DetailItem extends AppCompatActivity implements Serializable{
 
         Bundle extras = getIntent().getExtras();
         pfrss = new ParseFluxRss();
+
+        //Récupération du bundle contenant les objets d'article
         item = (Article)extras.getBundle("Bundle").getSerializable("Article");
 
+        //Récupérer les infos des items à nouveau pour pouvoir obtenir les images de thumbnail
+        //qui n'ont pu être passer par le bundle à cause de leur taille.
         tGetinfo = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -89,8 +93,13 @@ public class DetailItem extends AppCompatActivity implements Serializable{
                 index = i;
             }
         }
+
+        //Assigner le thumbnail
         image = items.get(index).image;
-        lien = item.lien;
+
+        //Remettre le lien à celui du contenu média, au lieu du lien du flux qui était
+        //nécessaire pour récupérer à nouveau la liste des articles.
+        lien = items.get(index).lien;
 
         Document doc = Jsoup.parse(item.description);
         Elements p = doc.getElementsByTag("p");
@@ -101,6 +110,7 @@ public class DetailItem extends AppCompatActivity implements Serializable{
             }
         }
 
+        //Initialisation des composantes visuelles
         TextView txtNom = this.findViewById(R.id.txtTitle);
         ImageView imageView = this.findViewById(R.id.imgIm);
         TextView txtDesc = this.findViewById(R.id.txtDesc);
@@ -117,8 +127,22 @@ public class DetailItem extends AppCompatActivity implements Serializable{
                 }
                 else if (mediaType.contains("video"))
                 {
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(lien));
-                    startActivity(intent);
+                    //Partir un nouveau thread pour la lecture de vidéo puisque ça nécessite d'accéder
+                    //au network.
+                    Thread tVue = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            //Intent implicite pour demander de jouer le vidéo.
+                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(lien));
+                            startActivity(intent);
+                        }
+                    });
+                    tVue.start();
+                    try {
+                        tVue.join();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });

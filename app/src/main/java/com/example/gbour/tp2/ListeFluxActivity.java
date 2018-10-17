@@ -99,8 +99,13 @@ public class ListeFluxActivity extends AppCompatActivity {
     }
 
     /**
+<<<<<<< Updated upstream
      * @author Gabriel Bourque et Nicolas Gonzalez
      * @decription Charge les données sauvegardées et rafraîchit la liste des fluxs
+=======
+     * @description Permet de réinitialiser la liste de flux pour appliquer les modifications dynamiquement
+     * au niveau de l'affichage
+>>>>>>> Stashed changes
      */
     public void RefreshList()
     {
@@ -130,6 +135,7 @@ public class ListeFluxActivity extends AppCompatActivity {
         });
         Load.start();
 
+        //Association de la liste au ListView
         ListeFluxActivity.this.runOnUiThread(new Runnable() {
             @Override
             public void run() {

@@ -65,6 +65,7 @@ public class ParseFluxRss {
          */
 
         String url = "";
+        //Validation de la présence d'une image
         try
         {
             children = doc.getElementsByTagName("image").item(0).getChildNodes();
@@ -73,6 +74,7 @@ public class ParseFluxRss {
         {
             children = null;
         }
+        //Obtention de l'url de l'image si celle-ci n'est pas nulle.
         if (children != null)
             url = children.item(3).getTextContent();
         try {
@@ -83,6 +85,7 @@ public class ParseFluxRss {
         Bitmap bmp = BitmapFactory.decodeStream(in);
         image = bmp;
 
+        //Ajout des informations de présentation (détails) du flux
         items.add(new RssItem(doc.getElementsByTagName("title").item(0).getTextContent(),
                 doc.getElementsByTagName("description").item(0).getTextContent(),
                 doc.getElementsByTagName("link").item(0).getTextContent(),
@@ -90,7 +93,9 @@ public class ParseFluxRss {
 
         int nbElements = doc.getElementsByTagName("item").getLength();
 
+        //NodeList pour les items
         NodeList nl = doc.getElementsByTagName("item");
+        //NodeList pour les ChildNodes (détails) des items
         NodeList nl2;
         for (int i = 0; i < (nbElements - 1); i++)
         {
@@ -98,13 +103,19 @@ public class ParseFluxRss {
             titre = doc.getElementsByTagName("title").item(i+1).getTextContent();
             //desc = doc.getElementsByTagName("description").item(i+1).getTextContent();
             desc = "";
+
+            //Obtention de toutes les informations de chaque node contenu dans item, concaténées
+            //dans une seule longue description.
             for (int j=0;j<nl2.getLength();j++)
             {
                 desc += (nl2.item(j).getNodeName() + ": " + nl2.item(j).getTextContent());
             }
             //lien = doc.getElementsByTagName("link").item(i+1).getTextContent();
+
+            //Validation de la présence de contenu média
             try
             {
+                //Obtention des informations du contenu média si non-null.
                 lien = doc.getElementsByTagName("media:content").item(i+1).getAttributes().getNamedItem("url").getTextContent();
                 mediaType = doc.getElementsByTagName("media:content").item(i+1).getAttributes().getNamedItem("type").getTextContent();
             }
