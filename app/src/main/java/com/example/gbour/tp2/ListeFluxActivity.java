@@ -170,17 +170,20 @@ public class ListeFluxActivity extends AppCompatActivity {
             public void run() {
                 DeserializeFluxs();
 
-                if (!listUrls.isEmpty()){
-                    for (String lien:listUrls) {
-                        try {
-                            DetailFlux detailFlux = new DetailFlux(lien);
-                            mesFlux.add(detailFlux);
-                        } catch (ParserConfigurationException e) {
-                            e.printStackTrace();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        } catch (SAXException e) {
-                            e.printStackTrace();
+                if (listUrls != null)
+                {
+                    if (!listUrls.isEmpty()){
+                        for (String lien:listUrls) {
+                            try {
+                                DetailFlux detailFlux = new DetailFlux(lien);
+                                mesFlux.add(detailFlux);
+                            } catch (ParserConfigurationException e) {
+                                e.printStackTrace();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            } catch (SAXException e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
                 }

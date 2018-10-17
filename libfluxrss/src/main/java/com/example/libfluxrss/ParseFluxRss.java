@@ -95,6 +95,11 @@ public class ParseFluxRss {
         {
             titre = doc.getElementsByTagName("title").item(i+1).getTextContent();
             desc = doc.getElementsByTagName("description").item(i+1).getTextContent();
+            desc = "";
+            //for (i=0;i<nl.getLength();i++)
+            //{
+            //    desc += (nl.item(i).getNodeName() + ": " + nl.item(i).getTextContent());
+            //}
             //lien = doc.getElementsByTagName("link").item(i+1).getTextContent();
             lien = doc.getElementsByTagName("media:content").item(i+1).getAttributes().getNamedItem("url").getTextContent();
             mediaType = doc.getElementsByTagName("media:content").item(i+1).getAttributes().getNamedItem("type").getTextContent();
