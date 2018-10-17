@@ -1,6 +1,7 @@
 package com.example.gbour.tp2;
 
 import android.content.Context;
+import android.os.DeadObjectException;
 import android.provider.SyncStateContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,13 +19,16 @@ import com.example.gbour.tp2.sqlite.database.model.Flux;
 import org.jsoup.Jsoup;
 import org.xml.sax.SAXException;
 
+import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.nio.BufferOverflowException;
 import java.util.ArrayList;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -40,6 +44,7 @@ public class ListeFluxActivity extends AppCompatActivity {
 
     ArrayList<DetailFlux> mesFlux;
     ArrayAdapter<DetailFlux> aa;
+    ArrayList<String> listUrls;
     EditText et;
     DetailFlux df;
     Thread tAdd;
@@ -53,7 +58,7 @@ public class ListeFluxActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_liste_flux);
 
-        db = new DatabaseHelper(this);
+        //db = new DatabaseHelper(this);
 
         mesFlux = new ArrayList<DetailFlux>();
         et = findViewById(R.id.txtURL);
@@ -86,7 +91,7 @@ public class ListeFluxActivity extends AppCompatActivity {
             @Override
             public void run() {
                 try {
-                    df = new DetailFlux(et.getText().toString());
+                      df = new DetailFlux(et.getText().toString());
 
                 } catch (ParserConfigurationException e) {
                     e.printStackTrace();
@@ -118,6 +123,7 @@ public class ListeFluxActivity extends AppCompatActivity {
                     //    db.insertUrl(et.getText().toString());
                         tAdd.join();
                         mesFlux.add(df);
+                        SerializeFluxs();
                     //}
 
 
@@ -159,41 +165,67 @@ public class ListeFluxActivity extends AppCompatActivity {
 
     public void RefreshList()
     {
+        Thread Load = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                DeserializeFluxs();
+
+                if (!listUrls.isEmpty()){
+                    for (String lien:listUrls) {
+                        try {
+                            DetailFlux detailFlux = new DetailFlux(lien);
+                            mesFlux.add(detailFlux);
+                        } catch (ParserConfigurationException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (SAXException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        });
+        Load.start();
+
         ListeFluxActivity.this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
+
                 aa = new DetailFluxAdapter(ListeFluxActivity.this, 0, mesFlux);
                 lv.setAdapter(aa);
             }
         });
     }
 
-    //private void SerializeFluxs(){
-    //    try {
-    //        FileOutputStream fos = getApplicationContext().openFileOutput("SavedFluxs", Context.MODE_PRIVATE);
-    //        ObjectOutputStream oos = new ObjectOutputStream(fos);
-    //        oos.writeObject(mesFlux);
-    //        oos.close();
-//
-    //    } catch (FileNotFoundException e) {
-    //        e.printStackTrace();
-    //    } catch (IOException e) {
-    //        e.printStackTrace();
-    //    }
-    //}
-//
-    //private void DeserializeFluxs(){
-    //    try {
-    //        FileInputStream fis = getApplicationContext().openFileInput("SavedFluxs");
-    //        ObjectInputStream ois = new ObjectInputStream(fis);
-    //        mesFlux = (ArrayList<DetailFlux>) ois.readObject();
-//
-    //    } catch (FileNotFoundException e) {
-    //        e.printStackTrace();
-    //    } catch (IOException e) {
-    //        e.printStackTrace();
-    //    } catch (ClassNotFoundException e) {
-    //        e.printStackTrace();
-    //    }
-    //}
-}//
+    private void SerializeFluxs(){
+        try {
+            FileOutputStream fos = getApplicationContext().openFileOutput("SavedFluxs", Context.MODE_PRIVATE);
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            for (DetailFlux df: mesFlux) {
+                oos.writeObject(df.lien);
+            }
+            oos.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void DeserializeFluxs(){
+        try {
+            FileInputStream fis = getApplicationContext().openFileInput("SavedFluxs");
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            String url = (String) ois.readObject();
+            listUrls = new ArrayList<String>();
+            listUrls.add(url);
+
+            } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+}
