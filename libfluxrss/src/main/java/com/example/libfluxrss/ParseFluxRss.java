@@ -91,18 +91,28 @@ public class ParseFluxRss {
         int nbElements = doc.getElementsByTagName("item").getLength();
 
         NodeList nl = doc.getElementsByTagName("item");
+        NodeList nl2;
         for (int i = 0; i < (nbElements - 1); i++)
         {
+            nl2 = nl.item(i+1).getChildNodes();
             titre = doc.getElementsByTagName("title").item(i+1).getTextContent();
-            desc = doc.getElementsByTagName("description").item(i+1).getTextContent();
+            //desc = doc.getElementsByTagName("description").item(i+1).getTextContent();
             desc = "";
-            //for (i=0;i<nl.getLength();i++)
-            //{
-            //    desc += (nl.item(i).getNodeName() + ": " + nl.item(i).getTextContent());
-            //}
+            for (int j=0;j<nl2.getLength();j++)
+            {
+                desc += (nl2.item(j).getNodeName() + ": " + nl2.item(j).getTextContent());
+            }
             //lien = doc.getElementsByTagName("link").item(i+1).getTextContent();
-            lien = doc.getElementsByTagName("media:content").item(i+1).getAttributes().getNamedItem("url").getTextContent();
-            mediaType = doc.getElementsByTagName("media:content").item(i+1).getAttributes().getNamedItem("type").getTextContent();
+            try
+            {
+                lien = doc.getElementsByTagName("media:content").item(i+1).getAttributes().getNamedItem("url").getTextContent();
+                mediaType = doc.getElementsByTagName("media:content").item(i+1).getAttributes().getNamedItem("type").getTextContent();
+            }
+            catch (NullPointerException ex)
+            {
+                lien = "";
+                mediaType = "";
+            }
 
             try
             {
