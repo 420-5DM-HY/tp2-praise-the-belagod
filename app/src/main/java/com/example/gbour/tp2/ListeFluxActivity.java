@@ -99,13 +99,9 @@ public class ListeFluxActivity extends AppCompatActivity {
     }
 
     /**
-<<<<<<< Updated upstream
      * @author Gabriel Bourque et Nicolas Gonzalez
-     * @decription Charge les données sauvegardées et rafraîchit la liste des fluxs
-=======
      * @description Permet de réinitialiser la liste de flux pour appliquer les modifications dynamiquement
      * au niveau de l'affichage
->>>>>>> Stashed changes
      */
     public void RefreshList()
     {
@@ -152,8 +148,11 @@ public class ListeFluxActivity extends AppCompatActivity {
      */
     private void SerializeFluxs(){
         try {
+            // Ouvre le fichier à écrire
             FileOutputStream fos = getApplicationContext().openFileOutput("SavedFluxs", Context.MODE_PRIVATE);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
+
+            // Écris chaque lien à sauvegarder
             for (DetailFlux df: mesFlux) {
                 oos.writeObject(df.lien);
             }
@@ -169,8 +168,12 @@ public class ListeFluxActivity extends AppCompatActivity {
      */
     private void DeserializeFluxs(){
         try {
+
+            // Ouvre le fichier à lire
             FileInputStream fis = getApplicationContext().openFileInput("SavedFluxs");
             ObjectInputStream ois = new ObjectInputStream(fis);
+
+            // S'occupe de charger les urls sauvegardés
             String url = (String) ois.readObject();
             listUrls = new ArrayList<String>();
             listUrls.add(url);
