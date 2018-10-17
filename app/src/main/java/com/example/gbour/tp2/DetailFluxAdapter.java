@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -62,7 +63,7 @@ public class DetailFluxAdapter extends ArrayAdapter {
         TextView txtNom = convertView.findViewById(R.id.txtNomFlux);
         ImageView imgImage = convertView.findViewById(R.id.imgFlux);
         TextView txtNonLus = convertView.findViewById(R.id.txtNbArticlesNonLus);
-        Button btnSupprimer = convertView.findViewById(R.id.btnSupprimer);
+        ImageButton btnSupprimer = convertView.findViewById(R.id.btnSupprimer);
 
         item = Flux.get(position);
 

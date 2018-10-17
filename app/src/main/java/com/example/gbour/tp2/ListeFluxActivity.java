@@ -36,7 +36,7 @@ import javax.xml.parsers.ParserConfigurationException;
 public class ListeFluxActivity extends AppCompatActivity {
 
     /**
-     * @author Gabriel Bourque
+     * @author Gabriel Bourque et Nicolas Gonzalez
      * @decription Activité présentant la liste de flux à l'usager et permettant d'en
      * rajouter et d'en retirer.
      * @param savedInstanceState
@@ -48,43 +48,20 @@ public class ListeFluxActivity extends AppCompatActivity {
     EditText et;
     DetailFlux df;
     Thread tAdd;
-    Thread tDelete;
     ListView lv;
 
-    DatabaseHelper db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_liste_flux);
 
-        //db = new DatabaseHelper(this);
-
         mesFlux = new ArrayList<DetailFlux>();
         et = findViewById(R.id.txtURL);
 
         lv = findViewById(R.id.lstListeFlux);
 
-        Thread SavedFluxs = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                if (db.getFluxsCount() > 0){
-                    for (Flux f : db.getAllFluxs()) {
-                        try {
-                            mesFlux.add(new DetailFlux(f.getUrl()));
-                        } catch (ParserConfigurationException e) {
-                            e.printStackTrace();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        } catch (SAXException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            }
-        });
 
-        //SavedFluxs.start();
         RefreshList();
 
         tAdd = new Thread(new Runnable() {
@@ -109,60 +86,22 @@ public class ListeFluxActivity extends AppCompatActivity {
             public void onClick(View v) {
                 tAdd.start();
                 try {
-                    boolean exist = false;
-
-                    //for (Flux f: db.getAllFluxs()) {
-
-                    //    if (f.getUrl().equals(et.getText().toString())){
-                    //        exist = true;
-                    //    }
-                    //}
-
-                    //if(!exist){
-
-                    //    db.insertUrl(et.getText().toString());
                         tAdd.join();
                         mesFlux.add(df);
                         SerializeFluxs();
-                    //}
-
-
-                    RefreshList();
+                        RefreshList();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
         });
 
-        //tDelete = new Thread(new Runnable() {
-        //    @Override
-        //    public void run() {
-        //        TextView NomFlux = findViewById(R.id.txtNomFlux);
-
-        //        for (DetailFlux df : mesFlux) {
-        //            for (Flux f : db.getAllFluxs()) {
-        //                if(df.titre.equals(NomFlux.getText().toString()) && df.lien.equals(f.getUrl())){
-        //                    db.deleteFlux(f);
-        //                    mesFlux.remove(df);
-        //                }
-        //            }
-        //        }
-        //    }
-        //});
-
-        //Button btnSupprimer = findViewById(R.id.btnSupprimer);
-        //if (btnSupprimer != null){
-        //    btnSupprimer.setOnClickListener(new View.OnClickListener() {
-        //        @Override
-        //        public void onClick(View v) {
-        //            //tDelete.start();
-
-        //            RefreshList();
-        //        }
-        //    });
-        //}
     }
 
+    /**
+     * @author Gabriel Bourque et Nicolas Gonzalez
+     * @decription Charge les données sauvegardées et rafraîchit la liste des fluxs
+     */
     public void RefreshList()
     {
         Thread Load = new Thread(new Runnable() {
@@ -201,6 +140,10 @@ public class ListeFluxActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * @author Nicolas Gonzalez
+     * @decription Sauvegarde les fluxs
+     */
     private void SerializeFluxs(){
         try {
             FileOutputStream fos = getApplicationContext().openFileOutput("SavedFluxs", Context.MODE_PRIVATE);
@@ -214,7 +157,10 @@ public class ListeFluxActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-
+    /**
+     * @author Nicolas Gonzalez
+     * @decription Charge les fluxs
+     */
     private void DeserializeFluxs(){
         try {
             FileInputStream fis = getApplicationContext().openFileInput("SavedFluxs");
