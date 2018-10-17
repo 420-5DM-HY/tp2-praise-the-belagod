@@ -2,7 +2,6 @@ package com.example.gbour.tp2;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,7 +14,6 @@ import com.example.libfluxrss.FluxAudio;
 import com.example.libfluxrss.FluxVideo;
 import com.example.libfluxrss.ParseFluxRss;
 import com.example.libfluxrss.RssItem;
-import com.example.libfluxrss.TraitementRSS;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -25,13 +23,12 @@ import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import javax.xml.parsers.ParserConfigurationException;
 
 /**
- * Detail d'un flux
+ * Details d'un flux
  */
 public class DetailItem extends AppCompatActivity implements Serializable{
 

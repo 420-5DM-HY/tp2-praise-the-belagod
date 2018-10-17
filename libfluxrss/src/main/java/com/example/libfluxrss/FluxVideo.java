@@ -29,13 +29,4 @@ public class FluxVideo {
         this.context = context;
         this.mediaController = new MediaController(context);
     }
-
-    /**
-     * @Author Gabriel Bourque
-     * Méthode permettant de charger la vidéo
-     */
-    public void LoadVideo()
-    {
-
-    }
 }
